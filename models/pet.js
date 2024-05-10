@@ -6,7 +6,6 @@ const visitSchema = new Schema(
   {
     photo: {
       type: String,
-      required: true,
     },
     visitReason: {
       type: String,
@@ -31,7 +30,6 @@ const petSchema = new Schema(
     },    
     photo: {
       type: String,
-      required: true,
     },
     name: {
       type: String,
@@ -67,16 +65,13 @@ const petSchema = new Schema(
       required: true,
     },
     medicalHistory: {
-      type: [String],
-      required: true,
+      type: [String]
     },
     medications: {
-      type: [String],
-      required: true,
+      type: [String]
     },
     allergies: {
-      type: [String],
-      required: true,
+      type: [String]
     },
     vetName: {
       type: String,
