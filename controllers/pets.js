@@ -33,7 +33,21 @@ async function index(req, res) {
 async function show(req, res) {
   try {
     const pet = await Pet.findById(req.params.petId)
-      .populate(['owner', 'visits.owner'])
+      .populate(['owner'])
+    res.status(200).json(pet)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+}
+
+async function update(req, res) {
+  try {
+    const pet = await Pet.findByIdAndUpdate(
+      req.params.petId,
+      req.body,
+      { new: true }
+    ).populate('owner')
     res.status(200).json(pet)
   } catch (error) {
     console.log(error)
@@ -44,5 +58,6 @@ async function show(req, res) {
 export {
   create,
   index,
-  show,
+	show,
+  update,
 }
