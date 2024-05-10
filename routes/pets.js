@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { decodeUserFromToken, checkAuth } from '../middleware/auth.js'
-import * as PetsCtrl from '../controllers/pets.js'
+import * as petsCtrl from '../controllers/pets.js'
 
 const router = Router()
 
@@ -9,6 +9,7 @@ const router = Router()
 
 /*---------- Protected Routes ----------*/
 router.use(decodeUserFromToken)
+router.post('/', checkAuth, petsCtrl.create)
 
 
 export { router }
