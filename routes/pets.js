@@ -11,5 +11,6 @@ const router = Router()
 router.use(decodeUserFromToken)
 router.post('/', checkAuth, petsCtrl.create)
 router.get('/', checkAuth, petsCtrl.index)
+router.get('/:petId', checkAuth, petsCtrl.show)
 
 export { router }

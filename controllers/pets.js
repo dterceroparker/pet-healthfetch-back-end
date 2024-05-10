@@ -30,7 +30,19 @@ async function index(req, res) {
   }
 }
 
+async function show(req, res) {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+      .populate(['owner', 'visits.owner'])
+    res.status(200).json(pet)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+}
+
 export {
   create,
   index,
+  show,
 }
