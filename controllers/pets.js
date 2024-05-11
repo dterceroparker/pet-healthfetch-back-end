@@ -67,8 +67,21 @@ async function createVisit(req, res) {
   }
 }
 
+const updateVisit = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+    const visit = pet.visits.id(req.body._id)
+    visit.visitReason = req.body.visitReason
+    await pet.save()
+    res.status(200).json(pet)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}
+
 export {
   createVisit,
+  updateVisit,
 
 	create,
 	index,
