@@ -13,5 +13,6 @@ router.get('/', checkAuth, petsCtrl.index)
 router.post('/', checkAuth, petsCtrl.create)
 router.get('/:petId', checkAuth, petsCtrl.show)
 router.put('/:petId', checkAuth, petsCtrl.update)
+router.post('/:petId/visits', checkAuth, petsCtrl.createVisit)
 
 export { router }
