@@ -79,12 +79,24 @@ const updateVisit = async (req, res) => {
   }
 }
 
+const deleteVisit = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+    pet.visits.remove({ _id: req.params.visitId })
+    await pet.save()
+    res.status(200).json(pet)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}
+
 export {
   createVisit,
   updateVisit,
+  deleteVisit,
 
 	create,
 	index,
 	show,
-	update,
+	update
 }
