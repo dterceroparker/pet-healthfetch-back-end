@@ -55,9 +55,23 @@ async function update(req, res) {
   }
 }
 
+async function createVisit(req, res) {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+    pet.visits.push(req.body)
+    await pet.save()
+    const newVisit = pet.visits.at(-1)
+    res.status(201).json(newVisit)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+}
+
 export {
-  create,
-  index,
+  createVisit,
+
+	create,
+	index,
 	show,
-  update,
+	update,
 }
