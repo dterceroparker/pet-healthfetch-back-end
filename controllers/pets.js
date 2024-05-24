@@ -1,5 +1,6 @@
 import { Profile } from "../models/profile.js"
 import { Pet } from "../models/pet.js"
+import { v2 as cloudinary } from 'cloudinary'
 
 async function create(req, res) {
   try {
@@ -10,7 +11,7 @@ async function create(req, res) {
       { $push: { pets: pet } },
       { new: true }
     )
-    pet.author = profile
+    pet.owner = profile
     res.status(201).json(pet)
   } catch (error) {
     console.log(error)
@@ -90,13 +91,73 @@ const deleteVisit = async (req, res) => {
   }
 }
 
+async function addPhoto(req, res) {
+  try {
+      const imageFile = req.files.photo.path
+      const image = await cloudinary.uploader.upload(
+      imageFile, 
+      { tags: `${req.user.email}` }
+      )
+      const pet = await Pet.findById(req.params.petId)
+      pet.photo = image.url
+      await pet.save()
+      res.status(201).json(pet)
+  } catch (err) {
+      console.log(err)
+      res.json(err)
+  }
+}
+
+async function deletePhoto(req, res) {
+  try {
+      const pet = await Pet.findById(req.params.petId)
+      pet.photo.slice(req.params.photoIdx, 1)
+      await pet.save()
+      res.status(200).json(pet)
+  } catch (err) {
+      console.log(err)
+      res.json(err)
+  }
+}
+
+async function addVisitPhoto(req, res) {
+  try {
+    const imageFile = req.files.photo.path
+    const image = await cloudinary.uploader.upload(
+    imageFile, 
+    { tags: `${req.user.email}` }
+    )
+    const visit = await visit.findById(req.params.visitId)
+    visit.photo = image.url
+    res.status(201).json(visit)
+  } catch (err) {
+      console.log(err)
+      res.json(err)
+  }
+}
+
+async function deleteVisitPhoto(req, res) {
+  try {
+    const visit = await visit.findById(req.params.visitId)
+    visit.photo.slice(req.params.photoIdx, 1)
+    res.status(200).json(visit)
+} catch (err) {
+    console.log(err)
+    res.json(err)
+}
+}
+
 export {
   createVisit,
   updateVisit,
   deleteVisit,
+  addVisitPhoto,
+  deleteVisitPhoto,
 
 	create,
 	index,
 	show,
-	update
+	update,
+  addPhoto,
+  deletePhoto
 }
