@@ -94,14 +94,14 @@ const deleteVisit = async (req, res) => {
 async function addPhoto(req, res) {
   try {
       const imageFile = req.files.photo.path
-      const image = await cloudinary.uploader.upload(
-      imageFile, 
-      { tags: `${req.user.email}` }
-      )
       const pet = await Pet.findById(req.params.petId)
+      const image = await cloudinary.uploader.upload(
+        imageFile, 
+        { tags: `${req.user.email}` }
+      )
       pet.photo = image.url
       await pet.save()
-      res.status(201).json(pet)
+      res.status(201).json(pet.photo)
   } catch (err) {
       console.log(err)
       res.json(err)
@@ -129,7 +129,7 @@ async function addVisitPhoto(req, res) {
     )
     const visit = await visit.findById(req.params.visitId)
     visit.photo = image.url
-    res.status(201).json(visit)
+    res.status(201).json(visit.photo)
   } catch (err) {
       console.log(err)
       res.json(err)
