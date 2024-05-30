@@ -12,6 +12,7 @@ async function create(req, res) {
       { new: true }
     )
     pet.owner = profile
+    console.log({pet})
     res.status(201).json(pet)
   } catch (error) {
     console.log(error)
