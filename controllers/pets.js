@@ -45,12 +45,18 @@ async function show(req, res) {
 
 async function update(req, res) {
   try {
-    const pet = await Pet.findByIdAndUpdate(
-      req.params.petId,
-      req.body,
-      { new: true }
-    ).populate('owner')
-    res.status(200).json(pet)
+    const petToCheck = await Pet.findById(req.params.petId)
+    if (petToCheck.owner.equals(req.user.profile)) {
+      console.log('owner is a match')
+      const pet = await Pet.findByIdAndUpdate(
+        req.params.petId,
+        req.body,
+        {new: true}
+      ).populate('owner')
+      res.status(200).json(pet)
+    } else {
+      res.status(401).json({error: 'Not Authorized'})
+    }
   } catch (error) {
     console.log(error)
     res.status(500).json(error)
