@@ -3,8 +3,8 @@ import { Pet } from "../models/pet.js"
 import { v2 as cloudinary } from 'cloudinary'
 
 async function create(req, res) {
+  req.body.owner = req.user.profile
   try {
-    req.body.owner = req.user.profile
     const pet = await Pet.create(req.body)
     const profile = await Profile.findByIdAndUpdate(
       req.user.profile,
@@ -95,6 +95,7 @@ const deleteVisit = async (req, res) => {
 async function addPhoto(req, res) {
   try {
       const imageFile = req.files.photo.path
+      console.log('im here', req.params.petId)
       const pet = await Pet.findById(req.params.petId)
       const image = await cloudinary.uploader.upload(
         imageFile, 
