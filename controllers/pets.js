@@ -6,15 +6,18 @@ async function create(req, res) {
   req.body.owner = req.user.profile
   try {
     const pet = await Pet.create(req.body)
+    console.log(`PET ${pet.name} CREATED`)
     const profile = await Profile.findByIdAndUpdate(
       req.user.profile,
       { $push: { pets: pet } },
       { new: true }
     )
+    console.log(`OWNER FOR ${pet.name} FOUND`, {profile})
     pet.owner = profile
-    console.log({pet})
+    console.log('PET PROFILE SET. RETURNING:', {pet})
     res.status(201).json(pet)
   } catch (error) {
+    console.log('ERROR OCCURRED CREATING PET')
     console.log(error)
     res.status(500).json(error)
   }
@@ -100,15 +103,21 @@ const deleteVisit = async (req, res) => {
 
 async function addPhoto(req, res) {
   try {
+    console.log(`ADDING PET PHOTO`)
+    console.log(`----- REQ.FILES FOR ADD PET PHOTO -----`, {files: req.files})
       const imageFile = req.files.photo.path
-      console.log('im here', req.params.petId)
+      console.log(`----- REQ.PARAMS FOR ADD PET PHOTO -----`, {params: req.params})
       const pet = await Pet.findById(req.params.petId)
+      console.log(`PET ${pet.name} FOUND WHEN ADDING PHOTO`)
       const image = await cloudinary.uploader.upload(
-        imageFile, 
+        imageFile,
         { tags: `${req.user.email}` }
       )
+      console.log(`IMAGE UPLOADED WITH TAGS ${req.user.email}`)
       pet.photo = image.url
+      console.log(`PET.PHOTO SET TO`, {url: image.url})
       await pet.save()
+      console.log(`PET SAVED WITH PHOTO`)
       res.status(201).json(pet.photo)
   } catch (err) {
       console.log(err)
