@@ -12,9 +12,9 @@ async function create(req, res) {
       { $push: { pets: pet } },
       { new: true }
     )
-    console.log(`OWNER FOR ${pet.name} FOUND`, {profile})
+    console.log(`OWNER FOR ${pet.name} FOUND`, JSON.stringify({profile}))
     pet.owner = profile
-    console.log('PET PROFILE SET. RETURNING:', {pet})
+    console.log('PET PROFILE SET. RETURNING:', JSON.stringify({pet}))
     res.status(201).json(pet)
   } catch (error) {
     console.log('ERROR OCCURRED CREATING PET')
