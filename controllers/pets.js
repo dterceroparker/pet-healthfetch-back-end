@@ -68,15 +68,26 @@ async function update(req, res) {
 
 async function createVisit(req, res) {
   try {
+    // 1. Find the pet by ID
     const pet = await Pet.findById(req.params.petId)
+    // 2. Check if pet exists
+    if (!pet) {
+      return res.status(404).json({ message: 'Pet not found' })
+    }
+    // 3. Add new visit to pet's visits array
     pet.visits.push(req.body)
+    console.log("req.body:", req.body)
+    // 4. Save the updated pet object with the new visit
     await pet.save()
+    // 5. Retrieve the newly created visit
     const newVisit = pet.visits.at(-1)
+    // 6. Send successful response with the new visit
     res.status(201).json(newVisit)
   } catch (error) {
     res.status(500).json(error)
+    }
   }
-}
+
 
 const updateVisit = async (req, res) => {
   try {
@@ -117,20 +128,9 @@ async function addPhoto(req, res) {
       pet.photo = image.url
       console.log(`PET.PHOTO SET TO`, {url: image.url})
       await pet.save()
+      
       console.log(`PET SAVED WITH PHOTO`)
       res.status(201).json(pet.photo)
-  } catch (err) {
-      console.log(err)
-      res.json(err)
-  }
-}
-
-async function deletePhoto(req, res) {
-  try {
-      const pet = await Pet.findById(req.params.petId)
-      pet.photo.slice(req.params.photoIdx, 1)
-      await pet.save()
-      res.status(200).json(pet)
   } catch (err) {
       console.log(err)
       res.json(err)
@@ -153,28 +153,15 @@ async function addVisitPhoto(req, res) {
   }
 }
 
-async function deleteVisitPhoto(req, res) {
-  try {
-    const visit = await visit.findById(req.params.visitId)
-    visit.photo.slice(req.params.photoIdx, 1)
-    res.status(200).json(visit)
-} catch (err) {
-    console.log(err)
-    res.json(err)
-}
-}
-
 export {
   createVisit,
   updateVisit,
   deleteVisit,
   addVisitPhoto,
-  deleteVisitPhoto,
 
 	create,
 	index,
 	show,
 	update,
   addPhoto,
-  deletePhoto
 }
