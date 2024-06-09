@@ -66,52 +66,6 @@ async function update(req, res) {
   }
 }
 
-async function createVisit(req, res) {
-  try {
-    // 1. Find the pet by ID
-    const pet = await Pet.findById(req.params.petId)
-    // 2. Check if pet exists
-    if (!pet) {
-      return res.status(404).json({ message: 'Pet not found' })
-    }
-    // 3. Add new visit to pet's visits array
-    pet.visits.push(req.body)
-    console.log("req.body:", req.body)
-    // 4. Save the updated pet object with the new visit
-    await pet.save()
-    // 5. Retrieve the newly created visit
-    const newVisit = pet.visits.at(-1)
-    // 6. Send successful response with the new visit
-    res.status(201).json(newVisit)
-  } catch (error) {
-    res.status(500).json(error)
-    }
-  }
-
-
-const updateVisit = async (req, res) => {
-  try {
-    const pet = await Pet.findById(req.params.petId)
-    const visit = pet.visits.id(req.body._id)
-    visit.visitReason = req.body.visitReason
-    await pet.save()
-    res.status(200).json(pet)
-  } catch (err) {
-    res.status(500).json(err)
-  }
-}
-
-const deleteVisit = async (req, res) => {
-  try {
-    const pet = await Pet.findById(req.params.petId)
-    pet.visits.remove({ _id: req.params.visitId })
-    await pet.save()
-    res.status(200).json(pet)
-  } catch (err) {
-    res.status(500).json(err)
-  }
-}
-
 async function addPhoto(req, res) {
   try {
     console.log(`ADDING PET PHOTO`)
@@ -134,6 +88,55 @@ async function addPhoto(req, res) {
   } catch (err) {
       console.log(err)
       res.json(err)
+  }
+}
+
+async function createVisit(req, res) {
+  try {
+    // 1. Find the pet by ID
+    console.log("** Request Body:**", req.body)
+    const pet = await Pet.findById(req.params.petId)
+    console.log("** Found Pet:**", pet ? pet._id : null)
+    // 2. Check if pet exists
+    if (!pet || !pet.visits) {
+      return res.status(404).json({ message: 'Pet not found' });
+    }
+    // 3. Add new visit to pet's visits array
+    pet.visits.push(req.body)
+    console.log("req.body:", req.body)
+    console.log("** Updated Pet Visits:**", pet.visits)
+    // 4. Save the updated pet object with the new visit
+    await pet.save()
+    console.log("** Saved Pet Object:**", pet._id)
+    // 5. Retrieve the newly created visit
+    const newVisit = pet.visits.at(-1)
+    // 6. Send successful response with the new visit
+    res.status(201).json(newVisit)
+  } catch (error) {
+    res.status(500).json(error)
+    }
+  }
+
+const updateVisit = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+    const visit = pet.visits.id(req.body._id)
+    visit.visitReason = req.body.visitReason
+    await pet.save()
+    res.status(200).json(pet)
+  } catch (err) {
+    res.status(500).json(err)
+  }
+}
+
+const deleteVisit = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.petId)
+    pet.visits.remove({ _id: req.params.visitId })
+    await pet.save()
+    res.status(200).json(pet)
+  } catch (err) {
+    res.status(500).json(err)
   }
 }
 
