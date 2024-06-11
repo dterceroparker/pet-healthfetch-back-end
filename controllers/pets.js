@@ -37,6 +37,7 @@ async function index(req, res) {
 
 async function show(req, res) {
   try {
+    console.log("** Retrieved Show petId:**", req.params.petId)
     const pet = await Pet.findById(req.params.petId)
       .populate(['owner'])
     res.status(200).json(pet)
@@ -94,8 +95,10 @@ async function addPhoto(req, res) {
 async function createVisit(req, res) {
   try {
     // 1. Find the pet by ID
+    console.log("** Retrieved petId:**", req.params.petId)
     console.log("** Request Body:**", req.body)
     const pet = await Pet.findById(req.params.petId)
+    .populate('visits')
     console.log("** Found Pet:**", pet ? pet._id : null)
     // 2. Check if pet exists
     if (!pet || !pet.visits) {
