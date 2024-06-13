@@ -6,15 +6,15 @@ async function create(req, res) {
   req.body.owner = req.user.profile
   try {
     const pet = await Pet.create(req.body)
-    console.log(`PET ${pet.name} CREATED`)
+    // console.log(`PET ${pet.name} CREATED`)
     const profile = await Profile.findByIdAndUpdate(
       req.user.profile,
       { $push: { pets: pet } },
       { new: true }
     )
-    console.log(`OWNER FOR ${pet.name} FOUND`, JSON.stringify({profile}))
+    // console.log(`OWNER FOR ${pet.name} FOUND`, JSON.stringify({profile}))
     pet.owner = profile
-    console.log('PET PROFILE SET. RETURNING:', JSON.stringify({pet}))
+    // console.log('PET PROFILE SET. RETURNING:', JSON.stringify({pet}))
     res.status(201).json(pet)
   } catch (error) {
     console.log('ERROR OCCURRED CREATING PET')
@@ -37,7 +37,7 @@ async function index(req, res) {
 
 async function show(req, res) {
   try {
-    console.log("** Retrieved Show petId:**", req.params.petId)
+    // console.log("** Retrieved Show petId:**", req.params.petId)
     const pet = await Pet.findById(req.params.petId)
       .populate(['owner'])
     res.status(200).json(pet)
