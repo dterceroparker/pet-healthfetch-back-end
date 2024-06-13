@@ -6,10 +6,13 @@
 app = 'pet-healthfetch-back-end'
 primary_region = 'ewr'
 
+[env]
+  PORT = "8080"
+
 [build]
 
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
